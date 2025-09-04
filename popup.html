@@ -2,65 +2,89 @@
 <head>
     <title>Ask AI</title>
     <script src="popup.js" defer></script>
-    <style>
-    body {
-        width: 500px;
-        height: 800px;
-        display: flex;
-        flex-direction: column; /* Stack elements vertically */
-        justify-content: center;
-        align-items: center;
-        font-family: Arial, sans-serif;
-        margin: 0;
-        background: #f9f9f9;
-    }
+   <style>
+        body {
+            width: 500px;
+            height: 800px;
+            display: flex;
+            flex-direction: column; /* Stack elements vertically */
+            justify-content: flex-start;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f9f9f9;
+        }
 
-    h2 {
-        margin-bottom: 10px;
-        color: #333;
-    }
+        h2 {
+            margin-bottom: 20px;
+            color: #0078d7;
+            font-size: 22px;
+        }
 
-    div {
-        margin-bottom: 10px;
-    }
+        div {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px; /* spacing between items */
+            margin-bottom: 15px;
+        }
 
-    button {
-        padding: 6px 12px;
-        margin: 0 5px;
-        border: none;
-        border-radius: 5px;
-        background-color: #0078d7;
-        color: white;
-        cursor: pointer;
-        font-size: 14px;
-        transition: background 0.2s;
-    }
+        input[type="text"] {
+            flex: 1;
+            padding: 8px 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+            transition: border 0.2s, box-shadow 0.2s;
+        }
 
-    button:hover {
-        background-color: #005a9e;
-    }
+        input[type="text"]:focus {
+            border-color: #0078d7;
+            box-shadow: 0 0 5px rgba(0, 120, 215, 0.3);
+        }
 
-    pre {
-        width: 90%;
-        height: 80px;
-        overflow-y: auto;
-        padding: 8px;
-        background: #eee;
-        border-radius: 5px;
-        font-size: 13px;
-        white-space: pre-wrap; /* allow wrapping */
-        text-align: center;
-    }
+        button {
+            padding: 8px 14px;
+            border: none;
+            border-radius: 5px;
+            background-color: #0078d7;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background-color: #005a9e;
+        }
+
+        pre, p#output {
+            width: 90%;
+            min-height: 80px;
+            padding: 10px;
+            background: #eee;
+            border-radius: 5px;
+            font-size: 14px;
+            line-height: 1.4;
+            color: #333;
+            white-space: pre-wrap; /* wrap long text */
+            word-wrap: break-word; /* handle long words */
+            text-align: left;
+        }
     </style>
 </head>
     <body style="width:300px; height:200px; display:flex; justify-content:center; align-items:center;">
         <h2>Ask AI</h2>
 
-        <pre id="result"> Write your question..</pre>
         <div>
+            <input type="text" id="userInput" placeholder="Write your question..."/>
+
             <button id="ask">Ask</button>
             <button id="copy-btn">Copy</button>
         </div>
-
+        <p id="output"> </p>
     </body>
 </html>

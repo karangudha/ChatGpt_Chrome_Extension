@@ -1,11 +1,81 @@
 <!DOCTYPE>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Options</title>                    
+    <title>Options</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+            margin: 0;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        label {
+            font-size: 16px;
+            margin-bottom: 6px;
+            color: #444;
+        }
+
+        input[type="text"] {
+            padding: 8px 12px;
+            font-size: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 260px;
+            margin-bottom: 8px;
+            background: #fff;
+        }
+
+        button#saveBtn {
+            padding: 8px 18px;
+            font-size: 15px;
+            background: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 12px;
+            transition: background 0.2s;
+        }
+
+        button#saveBtn:hover {
+            background: #388e3c;
+        }
+
+        .success-message {
+            color: #388e3c;
+            font-size: 14px;
+            display: none;
+            margin-top: 10px;
+        }
+    </style>                    
 </head>
 <body>
-    <h1>Options Page</h1>
+    <h1> Chatgpt setting</h1>
+
+    <div class = "form-group">
+        <label for="apikey">API Key:</label>
+        <input type="text" id="apikey" name="apikey" placeholder="Enter your API key here">
+    </div>
+    <button id="save">Save</button>
+    <p id="success-message" class="success-message">
+        Settings saved successfully!
+    </p>
+    <script src="option.js"></script>
 </body>
 </html>

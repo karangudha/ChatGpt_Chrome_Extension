@@ -1,8 +1,11 @@
 document.getElementById("ask").addEventListener("click", () => {
-    const result = document.getElementById("result");
-    result.innerText = "Loading...";
-    
+    const input = document.getElementById("userInput").value;
     chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
-
-    });
-});
+        chrome.tabs.sendMessage(tab.id, { message: input  }, (response) => {
+            if(response && response.text)
+            {
+                document.getElementById("output").innerText = "Result :" + response.text;
+            }
+        })
+    })
+})

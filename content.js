@@ -1,16 +1,46 @@
-//this function gets the text from the webpage : web scraping, it only take text from <p> and <article> tags
-function getText() {
-    const article = document.querySelector('article');
-    if(article) return article.innerText;
-
-    const paragraphs = Array.from(document.getElementsByTagName('p'));
-    return paragraphs.map(p => p.innerText).join('\n');
-
-}
-//this function calls when we hit ask button
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if(request.action = "GET_TEXT"){
-        const text = getText();
-        sendResponse({ text });//sending text to popup.js
-    }
+    const question = request.message;
+
+    chrome.storage.sync.get(['openAIApiKey'], async ({ openAIApiKey }) => {
+        if (!openAIApiKey) {
+            sendResponse({ error: "API key not set." });
+            return;
+        }
+        try {
+            const answer = await callLLMAPI(question, openAIApiKey);
+            console.log("LLM answer:", answer);
+            sendResponse({ text: answer });
+        } catch (err) {
+            sendResponse({ error: err.message });
+        }
+    });
+
+    return true;
 });
+
+// Call LLM API (stub, replace with actual implementation)
+async function callLLMAPI(question, apiKey) {
+    const payload = {
+        contents: [
+            { 
+                parts: [{ text: question }] 
+            }
+        ]
+    };
+
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, 
+        {
+            method: "POST",
+            headers: { "Content-Type": "application/json"},
+            body: JSON.stringify({
+                contents: [
+                    {
+                        parts: [{text: question}],
+                    }
+                ]
+            })
+    });
+    
+    const data = await response.json();
+    return data?.candidates?.[0]?.content?.parts?.[0]?.text || "No response";
+}
