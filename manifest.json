@@ -3,7 +3,7 @@
     "name": "AI",
     "description": "An example Chrome extension.",
     "version": "1.0",
-    "permissions": ["scripting", "storage", "activeTab"],
+    "permissions": ["scripting", "storage", "activeTab", "identity"],
     "background": {
         "service_worker": "background.js"
     },
@@ -17,13 +17,6 @@
         "default_title": "chatgpt",
         "default_popup": "popup.html"
     },
-    "content_scripts": [
-        {
-            "matches": ["<all_urls>"],
-            "js": ["content.js"]
-        }
-    ],
-
     "options_page": "options.html",
     "host_permissions": ["<all_urls>"]
 }

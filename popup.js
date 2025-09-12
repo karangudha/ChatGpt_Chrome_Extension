@@ -22,10 +22,15 @@ function askQuestion()
     sessionStorage.setItem("messageContainer", JSON.stringify(messageContainer));
     render();
     chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
+        if(!tab || !tab.id) return;
         chrome.tabs.sendMessage(tab.id, { message: input  }, (response) => {
             if(response && response.text)
             {
                 messageContainer.push(response.text);
+                sessionStorage.setItem("messageContainer", JSON.stringify(messageContainer));
+                render();
+            }else if(response && response.error){
+                messageContainer.push("Error: " + response.error);
                 sessionStorage.setItem("messageContainer", JSON.stringify(messageContainer));
                 render();
             }

@@ -1,14 +1,13 @@
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     const question = request.message;
-
-    chrome.storage.sync.get(['openAIApiKey'], async ({ openAIApiKey }) => {
-        if (!openAIApiKey) {
-            sendResponse({ error: "API key not set." });
+    
+    chrome.storage.local.get(['accessToken'], async ({ accessToken }) => {
+        if (!accessToken) {
+            sendResponse({ error: "Token not found." });
             return;
         }
         try {
-            const answer = await callLLMAPI(question, openAIApiKey);
-            console.log("LLM answer:", answer);
+            const answer = await callLLMAPI(question, accessToken);
             sendResponse({ text: answer });
         } catch (err) {
             sendResponse({ error: err.message });
@@ -18,8 +17,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return true;
 });
 
-// Call LLM API (stub, replace with actual implementation)
-async function callLLMAPI(question, apiKey) {
+async function callLLMAPI(question, accessToken) {
     const payload = {
         contents: [
             { 
@@ -28,13 +26,17 @@ async function callLLMAPI(question, apiKey) {
         ]
     };
 
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, 
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent`, 
         {
             method: "POST",
-            headers: { "Content-Type": "application/json"},
+            headers: { 
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${accessToken}`
+            },
             body: JSON.stringify({
                 contents: [
                     {
+                        role: "user",
                         parts: [{text: question}],
                     }
                 ]
@@ -44,3 +46,4 @@ async function callLLMAPI(question, apiKey) {
     const data = await response.json();
     return data?.candidates?.[0]?.content?.parts?.[0]?.text || "No response";
 }
+
