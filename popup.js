@@ -1,3 +1,5 @@
+// import { retrieveAccessToken, callLLMAPI } from "./llmapicall.js"
+
 let messageContainer = JSON.parse(sessionStorage.getItem("messageContainer")) || [];
 render();
 document.getElementById("ask").addEventListener("click", () => {
@@ -13,27 +15,33 @@ function render() {
     document.getElementById("chatContainer").scrollTop = document.getElementById("chatContainer").scrollHeight;
 }
 
-function askQuestion()
-{
-    const input = document.getElementById("userInput").value;
-    document.getElementById("userInput").value = "";
-    if(!input) return;
-    messageContainer.push(input);
+async function askQuestion() {
+  const input = document.getElementById("userInput").value.trim();
+
+  if (!input) {
+    messageContainer.push("Please enter your question");
     sessionStorage.setItem("messageContainer", JSON.stringify(messageContainer));
     render();
-    chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
-        if(!tab || !tab.id) return;
-        chrome.tabs.sendMessage(tab.id, { message: input  }, (response) => {
-            if(response && response.text)
-            {
-                messageContainer.push(response.text);
-                sessionStorage.setItem("messageContainer", JSON.stringify(messageContainer));
-                render();
-            }else if(response && response.error){
-                messageContainer.push("Error: " + response.error);
-                sessionStorage.setItem("messageContainer", JSON.stringify(messageContainer));
-                render();
-            }
-        })
-    })
+    return;
+  }
+
+  // Clear input field
+  document.getElementById("userInput").value = "";
+  messageContainer.push(input);
+  sessionStorage.setItem("messageContainer", JSON.stringify(messageContainer));
+  render();
+
+  try {
+    const token = await retrieveAccessToken();
+    const answer = await callLLMAPI(input, token);
+
+    messageContainer.push(answer);
+    sessionStorage.setItem("messageContainer", JSON.stringify(messageContainer));
+    render();
+  } catch (error) {
+    // Covers both token errors and LLM API errors
+    messageContainer.push("Error: " + error.message || error);
+    sessionStorage.setItem("messageContainer", JSON.stringify(messageContainer));
+    render();
+  }
 }
