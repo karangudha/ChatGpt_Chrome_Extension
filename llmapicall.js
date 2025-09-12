@@ -1,3 +1,4 @@
+let isLocked = false;
 async function retrieveAccessToken()
 {
     const { accessToken } = await chrome.storage.local.get(['accessToken'])
@@ -5,6 +6,43 @@ async function retrieveAccessToken()
         throw new Error("Token not Found");
     }
     return accessToken; 
+}
+
+function render() {
+    document.getElementById("chatContainer").innerHTML = messageContainer.map(m => `<div class="msg">${m}</div>`).join('');
+    document.getElementById("chatContainer").scrollTop = document.getElementById("chatContainer").scrollHeight;
+}
+
+async function askQuestion() {
+  const input = document.getElementById("userInput").value.trim();
+
+  if (!input) {
+    messageContainer.push("Please enter your question");
+    sessionStorage.setItem("messageContainer", JSON.stringify(messageContainer));
+    render();
+    return;
+  }
+  isLocked = true;
+  // Clear input field
+  document.getElementById("userInput").value = "";
+  messageContainer.push(input);
+  sessionStorage.setItem("messageContainer", JSON.stringify(messageContainer));
+  render();
+
+  try {
+    const token = await retrieveAccessToken();
+    const answer = await callLLMAPI(input, token);
+
+    messageContainer.push(answer);
+    sessionStorage.setItem("messageContainer", JSON.stringify(messageContainer));
+    render();
+  } catch (error) {
+    // Covers both token errors and LLM API errors
+    messageContainer.push("Error: " + error.message || error);
+    sessionStorage.setItem("messageContainer", JSON.stringify(messageContainer));
+    render();
+  }
+  isLocked = false;
 }
 
 async function callLLMAPI(question, accessToken) {
@@ -36,5 +74,3 @@ async function callLLMAPI(question, accessToken) {
     const data = await response.json();
     return data?.candidates?.[0]?.content?.parts?.[0]?.text || "No response";
 }
-
-// ?export { retrieveAccessToken, callLLMAPI };

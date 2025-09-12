@@ -18,6 +18,5 @@
         "default_popup": "popup.html",
         "default_state": "enabled"
     },
-    "options_page": "options.html",
     "host_permissions": ["<all_urls>"]
 }

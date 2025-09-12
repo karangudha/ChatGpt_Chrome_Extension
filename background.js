@@ -112,35 +112,3 @@ function extractAccessToken(redirectURL)
     let params = new URLSearchParams(m[1].split("#")[0]);
     return params.get("access_token");
 }
-
-// chrome.tabs.onActivated.addListener(async (activeInfo) => {
-//     if(!injectedTabs.has(activeInfo.tabId))
-//     {
-//         injectContentScript(activeInfo.tabId);
-//     }
-// })
-
-// chrome.tabs.onUpdated.addListener(async (tabId) => {
-//     if(!injectedTabs.has(tabId))
-//     {
-//         injectContentScript(tabId);
-//     }
-// })
-
-// chrome.tabs.onRemoved.addListener(async (tabId) => {
-//     injectedTabs.delete(tabId);
-// })
-
-// async function injectContentScript(tabId) {
-//     injectedTabs.add(tabId);
-//     try {
-//         await chrome.scripting.executeScript({
-//             target: { tabId },
-//             files: ['content.js']
-//         });
-//     } catch (error) {
-//         injectedTabs.delete(tabId);
-//         return error;
-//     }
-//     console.log("script injected", tabId);
-// }
