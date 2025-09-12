@@ -15,7 +15,8 @@
             "128": "assets/icon-chatgpt.png"
         },
         "default_title": "chatgpt",
-        "default_popup": "popup.html"
+        "default_popup": "popup.html",
+        "default_state": "enabled"
     },
     "options_page": "options.html",
     "host_permissions": ["<all_urls>"]

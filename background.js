@@ -8,12 +8,20 @@ let authUrl = "https://accounts.google.com/o/oauth2/auth"
     authUrl += `&scope=${encodeURIComponent(scopes.join(" "))}`;
 const VALIDATION_BASE_URL = "https://www.googleapis.com/oauth2/v3/tokeninfo";
 
+const injectedTabs = new Set();
 
 chrome.runtime.onInstalled.addListener(() => {
     login();
 });
+
+chrome.action.onClicked.addListener(() => {
+    console.log("clicked on icon");
+    login();
+});
+
 async function login() {
     try {
+        console.log("login function called");
         const token = await getAccessToken();
         await saveToken(token);
     } catch (err) {
@@ -107,23 +115,34 @@ function extractAccessToken(redirectURL)
 }
 
 chrome.tabs.onActivated.addListener(async (activeInfo) => {
-    enjectContentScript(activeInfo.tabId);
+    if(!injectedTabs.has(activeInfo.tabId))
+    {
+        injectContentScript(activeInfo.tabId);
+    }
 })
+
 
 chrome.tabs.onUpdated.addListener(async (tabId) => {
-    enjectContentScript(tabId);
+    if(!injectedTabs.has(tabId))
+    {
+        injectContentScript(tabId);
+    }
 })
 
-async function enjectContentScript(tabId) {
-    let tab = await chrome.tabs.get(tabId);
-    if(typeof tab.url !== "string")
-        return;
-    
-    if(tab.url.startsWith("http") || tab.url.startsWith("https"))
-    {
+chrome.tabs.onRemoved.addListener(async (tabId) => {
+    injectedTabs.delete(tabId);
+})
+
+async function injectContentScript(tabId) {
+    injectedTabs.add(tabId);
+    try {
         await chrome.scripting.executeScript({
             target: { tabId },
             files: ['content.js']
         });
-    }  
+    } catch (error) {
+        injectedTabs.delete(tabId);
+        return error;
+    }
+    console.log("script injected", tabId);
 }
