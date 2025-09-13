@@ -5,7 +5,7 @@
         body {
             width: 500px;
             min-height: 200px; /* Increased height */
-            max-height: 600px;
+            max-height: 500px;
             display: flex;
             flex-direction: column; /* Stack elements vertically */
             justify-content: flex-start;
@@ -13,7 +13,7 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
-            background: #f9f9f9;
+            background: #f9f9f900;
         }
 
         h2 {
@@ -50,16 +50,18 @@
             padding: 8px 14px;
             border: none;
             border-radius: 5px;
-            background-color: #0078d7;
-            color: white;
+            /* background-color: #0078d7; */
+            /* color: white; */
             cursor: pointer;
             font-size: 14px;
             transition: background 0.2s;
         }
 
-        button:hover {
+        
+         /* button:hover {
             background-color: #005a9e;
-        }
+        } 
+        */
 
         pre, p#output {
             width: 90%;
@@ -79,7 +81,7 @@
             width: 95%;
             min-height: 100px;
             max-height: 500px; /* Fixed height for scrolling */
-            background: #fff;
+            background: #23191909;
             border: 1px solid #ddd;
             border-radius: 8px;
             margin-bottom: 15px;
@@ -135,11 +137,19 @@
             padding: 8px 14px;
             border: none;
             border-radius: 5px;
-            background-color: #0078d7;
+            /* background-color: #0078d7; */
             color: white;
             cursor: pointer;
             font-size: 14px;
             transition: background 0.2s;
+        }
+
+        .icon-btn {
+            width: 30px;
+            height: 30px;
+            background: url("assets/icon-search.png") no-repeat center;
+            background-size: contain;
+            border: none;
         }
     </style>
 </head>
@@ -149,9 +159,11 @@
         <div id="chatContainer"></div>
         <div class="input-row">
             <input type="text" id="userInput" placeholder="Ask anything..."/>
-            <button id="ask">Ask</button>
+            <button id="ask" class="icon-btn"></button>
         </div>  
         <script src="popup.js"></script>
         <script src="llmapicall.js"></script>
     </body>
 </html>
+
+

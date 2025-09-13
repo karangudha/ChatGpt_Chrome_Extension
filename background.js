@@ -14,13 +14,13 @@ chrome.runtime.onInstalled.addListener(() => {
     login();
 });
 
-chrome.action.onClicked.addListener(() => {
-    login();
-});
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+    if(msg.action == "refreshAccessToken")
+        login();
+})
 
 async function login() {
     try {
-        console.log("login function called");
         const token = await getAccessToken();
         await saveToken(token);
     } catch (err) {

@@ -13,6 +13,7 @@ function render() {
     document.getElementById("chatContainer").scrollTop = document.getElementById("chatContainer").scrollHeight;
 }
 
+
 async function askQuestion() {
   const input = document.getElementById("userInput").value.trim();
 
@@ -23,6 +24,9 @@ async function askQuestion() {
     return;
   }
   isLocked = true;
+  if(isLocked)
+    document.getElementById("ask").style.backgroundImage = 'url("assets/icon-pause.png")';
+
   // Clear input field
   document.getElementById("userInput").value = "";
   messageContainer.push(input);
@@ -43,6 +47,8 @@ async function askQuestion() {
     render();
   }
   isLocked = false;
+  if(!isLocked)
+    document.getElementById("ask").style.backgroundImage = 'url("assets/icon-search.png")';
 }
 
 async function callLLMAPI(question, accessToken) {
@@ -74,3 +80,7 @@ async function callLLMAPI(question, accessToken) {
     const data = await response.json();
     return data?.candidates?.[0]?.content?.parts?.[0]?.text || "No response";
 }
+
+document.getElementById("userInput").addEventListener("input" , () => {
+    document.getElementById("ask").style.backgroundImage = 'url("assets/icon-up-arrow.png")';
+})
