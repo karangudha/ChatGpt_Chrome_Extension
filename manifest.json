@@ -18,5 +18,13 @@
         "default_popup": "popup.html",
         "default_state": "enabled"
     },
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": [
+                "purify.min.js"
+            ]
+        }
+    ],
     "host_permissions": ["<all_urls>"]
 }

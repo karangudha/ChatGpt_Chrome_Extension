@@ -10,6 +10,7 @@ document.getElementById("userInput").addEventListener("keydown", (event) => {
         askQuestion();
 })
 function render() {
-    document.getElementById("chatContainer").innerHTML = messageContainer.map(m => `<div class="msg">${m}</div>`).join('');
+    document.getElementById("chatContainer").innerHTML = messageContainer.map(m => `<p class="msg">${marked.parse(m)}</p>`).join('');
     document.getElementById("chatContainer").scrollTop = document.getElementById("chatContainer").scrollHeight;
 }
+
