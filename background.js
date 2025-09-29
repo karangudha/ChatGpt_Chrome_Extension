@@ -1,5 +1,5 @@
 const redirectUri = chrome.identity.getRedirectURL();
-const clientID = "796946331955-0jemi6j3pdntcb004mv0a4fbbdgcgkvu.apps.googleusercontent.com"
+const clientID = ""
 const scopes = ["https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/generative-language.retriever","https://www.googleapis.com/auth/generative-language.peruserquota"];
 let authUrl = "https://accounts.google.com/o/oauth2/auth"
     authUrl += `?client_id=${clientID}`
