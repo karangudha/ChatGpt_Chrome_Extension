@@ -10,12 +10,13 @@ body{
     display: flex;
     flex-direction: column;
     height: 500px;
-    width: 400px;
+    min-width: 400px;
+    max-width: fit-content;
 }
 
 .chat-header {
     border-bottom: 1px solid hsl(240, 8%, 15%);
-    /* background: hsla(240, 8%, 6%, 0.5); */
+    background: hsla(240, 8%, 6%, 0.5);
     background: hsl(240, 8%, 8%);
     border-radius: 1rem;
     backdrop-filter: blur(12px);
@@ -80,7 +81,7 @@ body{
 
 .message {
     display: flex;
-    gap: 1rem;
+    /* gap: -5rem; */
     padding: 1rem;
     animation: messageEnter 0.3s ease-out;
 }
@@ -93,7 +94,7 @@ body{
     flex-direction: row;
 }
 
-.message-avatar {
+/* .message-avatar {
     width: 2rem;
     height: 2rem;
     border-radius: 50%;
@@ -101,33 +102,24 @@ body{
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-}
+} */
 
-.user-message .message-avatar {
-    background: hsl(262, 83%, 58%);
-    color: hsl(0, 0%, 98%);
-}
-
-.ai-message .message-avatar {
-    background: hsl(240, 8%, 12%);
-    color: hsl(0, 0%, 90%);
-}
 
 .message-content {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    max-width: 80%;
+    max-width: 50%;
 }
 
 .message-bubble {
     border-radius: 1.5rem;
     height: 100%;
-    padding: 0.5rem;
+    padding: 1rem;
     font-size: 0.875rem;
-    /* line-height: 1.5; */
-    /* word-wrap: break-word;
-    white-space: pre-wrap; */
+    line-height: 1.5;
+    word-wrap: break-word;
+    white-space: pre-wrap;
 }
 
 .user-message .message-content {
@@ -140,14 +132,119 @@ body{
 
 .user-bubble {
     background: hsl(262, 83%, 58%);
-    color:  hsl(0, 0%, 98%);
-    box-shadow: 0 4px 20px -4px hsla(262, 83%, 58%, 0.3);
+    color:  hsl(0, 100%, 100%);
+    /* box-shadow: 0 4px 20px -4px hsla(262, 83%, 58%, 0.3); */
 }
 
 .ai-bubble {
-    background: hsl(240, 8%, 12%);
-    color: hsl(0, 0%, 90%);
+    background: hsl(240, 36%, 42%);
+    color: hsl(0, 0%, 100%);
     border: 1px solid hsl(240, 8%, 15%);
+    /* box-shadow: 0 4px 20px -4px hsla(262, 83%, 58%, 0.3); */
+}
+
+/* Markdown formatting styles */
+.ai-bubble h1, .ai-bubble h2, .ai-bubble h3, .ai-bubble h4, .ai-bubble h5, .ai-bubble h6 {
+    margin: 1em 0 0.5em 0;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.ai-bubble h1 { font-size: 1.5em; }
+.ai-bubble h2 { font-size: 1.3em; }
+.ai-bubble h3 { font-size: 1.1em; }
+
+.ai-bubble h1:first-child,
+.ai-bubble h2:first-child,
+.ai-bubble h3:first-child {
+    margin-top: 0;
+}
+
+.ai-bubble ul, .ai-bubble ol {
+    margin: 0.5em 0;
+    padding-left: 1.5em;
+}
+
+.ai-bubble li {
+    margin: 0.3em 0;
+    line-height: 1.5;
+}
+
+.ai-bubble code {
+    background: hsla(240, 8%, 15%, 0.6);
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+    font-family: 'Courier New', Consolas, monospace;
+    font-size: 0.9em;
+    color: hsl(180, 100%, 75%);
+}
+
+.ai-bubble pre {
+    background: #282c34;
+    border-radius: 8px;
+    padding: 1em;
+    overflow-x: auto;
+    margin: 1em 0;
+    border: 1px solid var(--border);
+}
+
+.ai-bubble pre code {
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    font-size: 0.85em;
+    line-height: 1.6;
+    display: block;
+    color: inherit;
+}
+
+.ai-bubble strong {
+    font-weight: 600;
+    color: var(--foreground);
+}
+
+.ai-bubble em {
+    font-style: italic;
+}
+
+.ai-bubble blockquote {
+    border-left: 3px solid var(--chat-primary);
+    padding-left: 1em;
+    margin: 1em 0;
+    opacity: 0.9;
+}
+
+.ai-bubble hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 1.5em 0;
+}
+
+.ai-bubble a {
+    color: var(--chat-primary);
+    text-decoration: underline;
+}
+
+.ai-bubble a:hover {
+    color: var(--chat-primary-light);
+}
+
+.ai-bubble table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+}
+
+.ai-bubble th,
+.ai-bubble td {
+    border: 1px solid var(--border);
+    padding: 0.5em;
+    text-align: left;
+}
+
+.ai-bubble th {
+    background: hsla(240, 8%, 15%, 0.5);
+    font-weight: 600;
 }
 
 .message-time {
@@ -243,8 +340,8 @@ body{
     width: 2.5rem;
     height: 2.5rem;
     border-radius: 0.75rem;
-    background: hsl(262, 83%, 58%);;
-    color: hsl(0, 0%, 98%);;
+    background: hsl(262, 89%, 65%);
+    color: hsl(0, 0%, 100%);;
     border: none;
     cursor: pointer;
     display: flex;

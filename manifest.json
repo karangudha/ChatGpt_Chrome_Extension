@@ -14,17 +14,9 @@
             "48": "assets/icon-chatgpt.png",
             "128": "assets/icon-chatgpt.png"
         },
-        "default_title": "chatgpt",
+        "default_title": "AI Chat",
         "default_popup": "popup.html",
         "default_state": "enabled"
     },
-    "content_scripts": [
-        {
-            "matches": ["<all_urls>"],
-            "js": [
-                "purify.min.js"
-            ]
-        }
-    ],
     "host_permissions": ["<all_urls>"]
 }
