@@ -27,6 +27,13 @@ async function callLLMAPI(question, accessToken) {
                 "Authorization": `Bearer ${accessToken}`
             },
             body: JSON.stringify({
+                system_instruction: {
+                    parts: [
+                        { 
+                            text: "You are a helpful assistant and answer as concisely as possible." 
+                        }
+                    ]
+                },
                 contents: [
                     {
                         role: "user",

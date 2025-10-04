@@ -229,6 +229,7 @@ class ChatApp {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    document.querySelector('textarea').focus();
     new ChatApp();
 });
 
