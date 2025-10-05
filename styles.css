@@ -20,42 +20,15 @@ body{
 }
 
 .chat-header {
-    border-bottom: 1px solid hsl(240, 8%, 15%);
-    background: hsla(240, 8%, 6%, 0.5);
     background: hsl(240, 8%, 8%);
     border-radius: 1rem;
     backdrop-filter: blur(12px);
-    /* padding: 1rem 1.5rem; */
 }
-
-.header-content{
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-.ai-avater{
-    width: 2rem;
-    height: 2rem;
-    background: linear-gradient(135deg, hsl(262, 83%, 58%), hsl(220, 91%, 63%));
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 0.875rem;
-    color: hsl(0, 0%, 98%);
-}
-     
+    
 .header-info h1 {
     font-size: 1.125rem;
     font-weight: 600;
-    color: hsl(0, 0%, 98%);
-    margin: 0;
-}
-
-.header-info p {
-    font-size: 0.875rem;
-    color: hsl(240, 4%, 46%);
+    color: hsl(0, 2%, 52%);
     margin: 0;
 }
 
@@ -99,13 +72,11 @@ body{
     flex-direction: row;
 }
 
-
-
 .message-content {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    max-width: 50%;
+    /* gap: 0.5rem; */
+    /* max-width: 50%; */
 }
 
 .message-bubble {

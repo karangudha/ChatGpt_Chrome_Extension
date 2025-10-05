@@ -146,13 +146,7 @@ class ChatApp {
             }, 0);
         }
         
-        const timeSpan = document.createElement("span");
-        timeSpan.className = "message-time";
-        timeSpan.textContent = this.formatTime(timestamp);
-
         conntentDiv.appendChild(bubbleDiv);
-        conntentDiv.appendChild(timeSpan);
-        
         messageDiv.appendChild(conntentDiv);        
 
         return messageDiv;
