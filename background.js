@@ -1,11 +1,11 @@
 const redirectUri = chrome.identity.getRedirectURL();
 const clientID = "796946331955-0jemi6j3pdntcb004mv0a4fbbdgcgkvu.apps.googleusercontent.com"
-const scopes = ["https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/generative-language.retriever","https://www.googleapis.com/auth/generative-language.peruserquota"];
+const scopes = ["https://www.googleapis.com/auth/cloud-platform", "https://www.googleapis.com/auth/generative-language.retriever", "https://www.googleapis.com/auth/generative-language.peruserquota"];
 let authUrl = "https://accounts.google.com/o/oauth2/auth"
-    authUrl += `?client_id=${clientID}`
-    authUrl += `&response_type=token`
-    authUrl += `&redirect_uri=${encodeURIComponent(redirectUri)}`
-    authUrl += `&scope=${encodeURIComponent(scopes.join(" "))}`;
+authUrl += `?client_id=${clientID}`
+authUrl += `&response_type=token`
+authUrl += `&redirect_uri=${encodeURIComponent(redirectUri)}`
+authUrl += `&scope=${encodeURIComponent(scopes.join(" "))}`;
 const VALIDATION_BASE_URL = "https://www.googleapis.com/oauth2/v3/tokeninfo";
 
 const injectedTabs = new Set();
@@ -14,28 +14,35 @@ chrome.runtime.onInstalled.addListener(() => {
     login();
 });
 
-chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-    if(msg.action == "refreshAccessToken")
+async function refreshLogin() {
+    const expireAt = await chrome.storage.local.get(['expireAt']);
+    if (expireAt < Date.now())
         login();
+}
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+
+    if (msg.action == "refreshAccessToken") {
+        refreshLogin();
+    }
 })
 
+let expTime = 0;
 async function login() {
     try {
         const token = await getAccessToken();
-        await saveToken(token);
+        const time = Date.now() + expTime * 1000;
+        await saveTokenAndTime(token, time);
     } catch (err) {
         logError(err);
     }
 }
-function logError(error)
-{
+function logError(error) {
     console.error(`Error: ${error}`);
 }
 
-function saveToken(token)
-{
+function saveTokenAndTime(token, time) {
     return new Promise((resolve) => {
-        chrome.storage.local.set({accessToken : token}).then(() => {
+        chrome.storage.local.set({ accessToken: token, expireAt: time }).then(() => {
             resolve(true);
         });
     });
@@ -53,45 +60,44 @@ async function getAccessToken() {
 }
 
 //AUTHORIZE FUNTION WILL RETURN A REDIRECT URL, WHICH CONTAINS THE TOKEN
-function authorize()
-{
+function authorize() {
     return new Promise((resolve, reject) => {
         chrome.identity.launchWebAuthFlow({
             url: authUrl,
             interactive: true
         },
-        (redirectURL) => {
-            if (chrome.runtime.lastError) {
-            console.error("launchWebAuthFlow error:", chrome.runtime.lastError.message);
-            return reject(chrome.runtime.lastError.message);
-        }
-        if (!redirectURL) {
-            console.error("No redirect URL returned");
-            return reject("Authorization failed: no redirect URL");
-        }
-            resolve(redirectURL);
-        })
+            (redirectURL) => {
+                console.log(chrome.identity.getRedirectURL());
+                if (chrome.runtime.lastError) {
+                    console.error("launchWebAuthFlow error:", chrome.runtime.lastError.message);
+                    return reject(chrome.runtime.lastError.message);
+                }
+                if (!redirectURL) {
+                    console.error("No redirect URL returned");
+                    return reject("Authorization failed: no redirect URL");
+                }
+                resolve(redirectURL);
+            })
     })
 }
 
 //VALIDATE FUNCTION 
-function validate(redirectURL)
-{
+function validate(redirectURL) {
     const accessToken = extractAccessToken(redirectURL);
-    if(!accessToken)
+    expTime = extractExpTime(redirectURL);
+    if (!accessToken)
         throw "Authorization faliure";
 
     //validate the token by calling the validation endpoint
     const validationUrl = `${VALIDATION_BASE_URL}?access_token=${accessToken}`;
     const validationRequest = new Request(validationUrl, { method: "GET" });
 
-    function checkResponse(response){
+    function checkResponse(response) {
         return new Promise((resolve, reject) => {
-            if(response.status != 200)
+            if (response.status != 200)
                 return reject("Token validation failed");
             response.json().then((info) => {
-                if(info.aud && (info.aud === clientID))
-                {
+                if (info.aud && (info.aud === clientID)) {
                     resolve(accessToken);
                 }
                 else
@@ -104,11 +110,15 @@ function validate(redirectURL)
 }
 
 //EXTRACT ACCESS TOKEN FROM THE REDIRECT URL 
-function extractAccessToken(redirectURL)
-{
+function extractAccessToken(redirectURL) {
     const m = redirectURL.match(/[#?](.*)/);
-    if(!m || m.length < 1)
+    if (!m || m.length < 1)
         return null;
     let params = new URLSearchParams(m[1].split("#")[0]);
     return params.get("access_token");
+}
+
+function extractExpTime(redirectURL) {
+    const params = new URLSearchParams(redirectURL.split("#")[1]);
+    return params.get("expires_in");
 }

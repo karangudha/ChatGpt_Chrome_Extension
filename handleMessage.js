@@ -1,4 +1,4 @@
-chrome.runtime.sendMessage({action : "refreshAccessToken"});
+chrome.runtime.sendMessage({ action: "refreshAccessToken" });
 
 class ChatApp {
     constructor() {
@@ -31,15 +31,15 @@ class ChatApp {
                 this.handleSendMessage();
             }
         });
-        
+
         chrome.storage.local.get("selectedText", (data) => {
-            if(data.selectedText){
+            if (data.selectedText) {
                 this.messageInput.value = data.selectedText;
                 chrome.storage.local.remove("selectedText");
             }
         })
 
-       
+
 
         this.messageInput.addEventListener('input', () => {
             this.autoResizeTextArea();
@@ -57,14 +57,14 @@ class ChatApp {
         this.messageInput.style.height = Math.min(this.messageInput.scrollHeight, 192) + 'px';
     }
 
-    updateSendButtonState(){
+    updateSendButtonState() {
         const hasText = this.messageInput.value.trim().length;
         this.sendButton.disabled = this.isLoading || !hasText;
     }
 
     async handleSendMessage() {
         const text = this.messageInput.value.trim();
-        if(!text || this.isLoading) return;
+        if (!text || this.isLoading) return;
 
         // add user message
         this.addMessage(text, true);
@@ -84,7 +84,7 @@ class ChatApp {
             // const response = "A cow is a domesticated farm animal that is widely known for its gentle nature and importance to human society. It is a herbivore, primarily feeding on grass, and plays a significant role in agriculture by providing milk, meat, leather, and dung, which can be used as fertilizer or fuel. Cows are social animals, often forming close bonds with other members of their herd, and they have a strong maternal instinct. In many cultures, cows hold cultural or religious significance; for example, in India, they are considered sacred and revered. Overall, cows are not only valuable for their economic contributions but also respected for their calm and nurturing presence.";
             const response = await askQuestion(text);
             this.removeLoadingMessage();
-            
+
             this.addMessage(response, false);
         } catch (error) {
             console.error("Error fetching response:", error);
@@ -95,15 +95,14 @@ class ChatApp {
         }
     }
 
-    addMessage(text, isUser)
-    {
+    addMessage(text, isUser) {
         const messageId = `message-${++this.messageIdCounter}`; // message-10
         const timestamp = new Date();
 
         //save the message
         this.message.push({
             id: messageId,
-            text, 
+            text,
             isUser,
             timestamp
         });
@@ -117,8 +116,7 @@ class ChatApp {
         this.scrollToBottom();
     };
 
-    createMessageElement(messageId, text, isUser, timestamp)
-    {
+    createMessageElement(messageId, text, isUser, timestamp) {
         const messageDiv = document.createElement("div");
         messageDiv.className = `message ${isUser ? "user-message" : "ai-message"}`;
         messageDiv.setAttribute('data-message-id', messageId);
@@ -128,7 +126,7 @@ class ChatApp {
 
         const bubbleDiv = document.createElement('div');
         bubbleDiv.className = `message-bubble ${isUser ? 'user-bubble' : 'ai-bubble'}`;
-        
+
         // Format content based on whether it's user or AI message
         if (isUser) {
             const textP = document.createElement('p');
@@ -145,15 +143,14 @@ class ChatApp {
                 });
             }, 0);
         }
-        
+
         conntentDiv.appendChild(bubbleDiv);
-        messageDiv.appendChild(conntentDiv);        
+        messageDiv.appendChild(conntentDiv);
 
         return messageDiv;
     };
 
-    showLoadingMessage()
-    {
+    showLoadingMessage() {
         const loadingDiv = document.createElement("div");
         loadingDiv.className = "loading-message";
         loadingDiv.id = "loadingMessage";
@@ -170,20 +167,18 @@ class ChatApp {
         this.scrollToBottom();
     }
 
-    removeLoadingMessage() 
-    {
+    removeLoadingMessage() {
         const loadingMessage = document.getElementById("loadingMessage");
         if (loadingMessage) {
             loadingMessage.remove();
         }
     }
 
-    setLoadingState(loading)
-    {
+    setLoadingState(loading) {
         this.isLoading = loading;
         this.updateSendButtonState();
 
-          if (loading) {
+        if (loading) {
             this.sendIcon.classList.add('hidden');
             this.loadingIcon.classList.remove('hidden');
         } else {
@@ -192,18 +187,16 @@ class ChatApp {
         }
     }
 
-    scrollToBottom()
-    {
+    scrollToBottom() {
         setTimeout(() => {
             this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight;
         }, 50)
     };
 
-    formatTime(date)
-    {
-        return date.toLocaleTimeString([],{
+    formatTime(date) {
+        return date.toLocaleTimeString([], {
             hour: '2-digit',
-            minute: '2-digit' 
+            minute: '2-digit'
         });
     }
 
@@ -214,7 +207,7 @@ class ChatApp {
                 breaks: true,
                 gfm: true
             });
-            
+
             return marked.parse(text);
         }
         // Fallback if marked is not loaded
