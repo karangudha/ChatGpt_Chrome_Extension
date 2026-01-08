@@ -12,23 +12,31 @@ document.body.appendChild(menu);
 const btn = document.createElement("button");
 btn.className = "ask-ai-button";
 btn.id = "Ask";
-btn.textContent = "?";
+btn.textContent = "kya haii ?";
 btn.style.cursor = "pointer";
 btn.style.border = "1px solid #aaa";
 btn.style.borderRadius = "4px";    // rounded corners
-btn.style.color = "#9d2121ff";
+btn.style.color = "#000000ff";
 
 menu.appendChild(btn);
-document.addEventListener('mouseup', (e) => {
-    const selection = window.getSelection().toString().trim();
-    if(selection.length > 0) {
-        menu.style.display = 'block';
-        menu.style.left = e.pageX + 'px';
-        menu.style.top = e.pageY + 'px';
-    }else{
+
+document.addEventListener('mouseup', () => {
+    const selection = window.getSelection();
+
+    if (!selection || selection.rangeCount === 0 || !selection.toString().trim()) {
         menu.style.display = 'none';
+        return;
     }
+
+    const range = selection.getRangeAt(0);
+    const rect = range.getClientRects()[0]; // start of selection
+
+    menu.style.display = 'block';
+    menu.style.position = 'absolute';
+    menu.style.left = (rect.left + window.scrollX) + 'px';
+    menu.style.top = (rect.top + window.scrollY - menu.offsetHeight - 8) + 'px';
 });
+
 
 btn.addEventListener('click', () => {
     const selection = window.getSelection().toString().trim();
