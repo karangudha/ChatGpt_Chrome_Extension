@@ -12,11 +12,13 @@ document.body.appendChild(menu);
 const btn = document.createElement("button");
 btn.className = "ask-ai-button";
 btn.id = "Ask";
-btn.textContent = "kya haii ?";
+btn.textContent = " kya haii ? ";
 btn.style.cursor = "pointer";
 btn.style.border = "1px solid #aaa";
 btn.style.borderRadius = "4px";    // rounded corners
-btn.style.color = "#000000ff";
+btn.style.color = "#ffffffff";
+btn.style.backgroundColor = "#060606ff";
+
 
 menu.appendChild(btn);
 

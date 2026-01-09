@@ -75,6 +75,11 @@ async function callLLMAPI(question, accessToken) {
                 ]
             })
         });
+
+    // if (response.status === 401) {
+    //     chrome.runtime.sendMessage({ action: "tokenExpire" }); retry logic
+    // }
+
     const data = await response.json();
     return data?.candidates?.[0]?.content?.parts?.[0]?.text || "No response";
 }
